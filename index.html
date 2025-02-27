@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamees Turtle Timer ♡</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Yamees Turtle Timer ♡</h1>
+    <div id="question-container">
+        <p>Do you miss me? :(</p>
+        <button class="big-button" onclick="nextQuestion(true)">Yes</button>
+        <button class="small-button" onclick="nextQuestion(false)">No</button>
+    </div>
+
+    <div id="second-question-container" style="display: none;">
+        <p>Are you suuuuure?</p>
+        <button class="big-button" onclick="showCountdown()">Yes</button>
+        <button class="small-button" onclick="showBrokenHeart()">No</button>
+    </div>
+
+    <div id="input-container" style="display: none;">
+        <div id="instructions">
+            <p>Instructions</p>
+            <p>1. Enter the date of when you will be coming back</p>
+            <p>2. First press the date section and enter day, month and year</p>
+            <p>3. You have to press the time section and enter "00:00" hours</p>
+            <p>love you! Cant wait to see you. Have fun :)</p>
+        </div>
+        <label for="dateInput">Enter Date:</label>
+        <input type="datetime-local" id="dateInput">
+        <button onclick="startCountdown()">Start Countdown</button>
+    </div>
+
+    <div id="countdown-container" style="display: none;">
+        <div id="countdown"></div>
+    </div>
+
+    <div id="heart-container" style="display: none;">
+        <div class="broken-heart">💔</div>
+        <div id="choose-again-container">
+            <button class="big-button" onclick="resetQuestions()">Choose again >:(</button>
+        </div>
+    </div>
+
+    <div id="gif-container">
+        <img src="turtle.gif" alt="Turtle GIF">
+    </div>
+
+    <script>
+        let countdownInterval;
+
+        function nextQuestion(isYes) {
+            if (isYes) {
+                document.getElementById("question-container").style.display = "none";
+                document.getElementById("second-question-container").style.display = "block";
+            } else {
+                showBrokenHeart();
+            }
+        }
+
+        function showBrokenHeart() {
+            document.getElementById("question-container").style.display = "none";
+            document.getElementById("second-question-container").style.display = "none";
+            document.getElementById("heart-container").style.display = "block";
+        }
+
+        function showCountdown() {
+            document.getElementById("second-question-container").style.display = "none";
+            document.getElementById("input-container").style.display = "block";
+        }
+
+        function resetQuestions() {
+            document.getElementById("heart-container").style.display = "none";
+            document.getElementById("question-container").style.display = "block";
+        }
+
+        function startCountdown() {
+            clearInterval(countdownInterval);
+            const dateInput = document.getElementById("dateInput").value;
+            const targetDate = new Date(dateInput).getTime();
+            
+            if (isNaN(targetDate)) {
+                document.getElementById("countdown").innerHTML = "Please enter a valid date.";
+                return;
+            }
+
+            document.getElementById("input-container").style.display = "none";
+            document.getElementById("countdown-container").style.display = "block";
+
+            countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const timeLeft = targetDate - now;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("countdown").innerHTML = "Time is up! Days left until we're together!";
+                    return;
+                }
+
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                const countdownText = `${days}d ${hours}h ${minutes}m ${seconds}s left`;
+                document.getElementById("countdown").innerHTML = `${countdownText} <br> Days left until we're together!`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
